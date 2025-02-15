@@ -11,16 +11,16 @@ if [[ -z "$API_KEY" ]]; then
 fi
 
 MODEL="meta-llama/llama-3.3-70b-instruct"  # Default model
-if [[ "$1" == "--gemini" ]]; then
+if [[ "$1" == "-g" ]]; then
     MODEL="google/gemini-2.0-flash-001"
     shift  # Remove the flag from arguments
 fi
 
 # Ensure a question is provided
 if [[ -z "$1" ]]; then
-    echo "Usage: llm [--gemini] \"your question here\""
+    echo "Usage: llm [-g] \"your question here\""
     echo "Options:"
-    echo "  --gemini    Use Google's Gemini model instead of Llama"
+    echo "  -g    Use Google's Gemini model instead of Llama"
     exit 1
 fi
 
