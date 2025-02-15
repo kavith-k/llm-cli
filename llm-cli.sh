@@ -61,12 +61,12 @@ echo -e "\n$MESSAGE\n"
 # Fetch generation stats with retries
 if [[ -n "$GENERATION_ID" && "$GENERATION_ID" != "null" ]]; then
   # Retry stats fetch up to 3 times with increasing delays
-  for retry in {1..3}; do
-    sleep $((retry * 2))  # Wait 2, 4, then 6 seconds
-    
+  for retry in {0..2}; do
+    sleep $((retry * 2))  # Wait 0, 2, then 4 seconds
+
     STATS_RESPONSE=$(curl -s "https://openrouter.ai/api/v1/generation?id=$GENERATION_ID" \
       -H "Authorization: Bearer $API_KEY")
-      
+
     # If we get valid JSON with data (not an error response), break the loop
     if echo "$STATS_RESPONSE" | jq -e '.data' >/dev/null 2>&1; then
       break
