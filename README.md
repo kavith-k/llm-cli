@@ -1,6 +1,8 @@
 # LLM CLI Tool
 
-A command-line interface for interacting with large language models through OpenRouter.
+A command-line interface for interacting with large language models through OpenRouter. 
+
+This tool was mostly built using LLMs: [ChatGPT 4o](https://chatgpt.com) and Claude 3.5 Sonnet via [Aider](https://aider.chat/).
 
 ## Setup
 
@@ -19,7 +21,7 @@ llm "your question here"
 
 Use Gemini model:
 ```bash
-llm --gemini "your question here"
+llm -g "your question here"
 ```
 
 Use Claude 3.5 Sonnet:
@@ -37,8 +39,8 @@ llm -r1 "your question here"
 - Direct access to powerful language models from the command line
 - Automatic token usage and cost tracking
 - Support for multiple models:
-  - Meta's Llama 3 70B (default)
-  - Google's Gemini 2.0
+  - Meta's Llama 3.3 70B (default)
+  - Google's Gemini 2.0 Flash
   - Anthropic's Claude 3.5 Sonnet
   - DeepSeek R1
 - Secure API key storage using macOS Keychain
