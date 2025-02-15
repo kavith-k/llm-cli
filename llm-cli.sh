@@ -58,19 +58,23 @@ GENERATION_ID=$(echo "$RESPONSE" | jq -r '.id')
 # Print the LLM response
 echo -e "\n$MESSAGE\n"
 
-# Add a small delay to ensure stats are available
-sleep 1
-
-# Fetch generation stats
+# Fetch generation stats with retries
 if [[ -n "$GENERATION_ID" && "$GENERATION_ID" != "null" ]]; then
-  STATS_RESPONSE=$(curl -s "https://openrouter.ai/api/v1/generation?id=$GENERATION_ID" \
-    -H "Authorization: Bearer $API_KEY")
+  # Retry stats fetch up to 3 times with increasing delays
+  for retry in {1..3}; do
+    sleep $((retry * 2))  # Wait 2, 4, then 6 seconds
+    
+    STATS_RESPONSE=$(curl -s "https://openrouter.ai/api/v1/generation?id=$GENERATION_ID" \
+      -H "Authorization: Bearer $API_KEY")
+      
+    # If we get valid JSON with data (not an error response), break the loop
+    if echo "$STATS_RESPONSE" | jq -e '.data' >/dev/null 2>&1; then
+      break
+    fi
+  done
 
-  echo "STATS_RESPONSE: $STATS_RESPONSE"
-
-  # Check if stats response is valid JSON
-  if echo "$STATS_RESPONSE" | jq empty >/dev/null 2>&1; then
-    # Extract statistics
+  # Extract statistics with fallbacks to "?" for missing data
+  if echo "$STATS_RESPONSE" | jq -e '.data' >/dev/null 2>&1; then
     INPUT_TOKENS=$(echo "$STATS_RESPONSE" | jq -r '.data.native_tokens_prompt // "?"')
     OUTPUT_TOKENS=$(echo "$STATS_RESPONSE" | jq -r '.data.native_tokens_completion // "?"')
     GENERATION_TIME=$(echo "$STATS_RESPONSE" | jq -r '.data.generation_time // "?"')
@@ -79,6 +83,6 @@ if [[ -n "$GENERATION_ID" && "$GENERATION_ID" != "null" ]]; then
     # Print stats in a compact horizontal format
     echo -e "Model: $MODEL_NAME | Input Tokens: $INPUT_TOKENS | Output Tokens: $OUTPUT_TOKENS | Time: ${GENERATION_TIME}ms | Cost: \$${TOTAL_COST}"
   else
-    echo "Warning: Could not retrieve generation stats."
+    echo "Note: Generation stats unavailable (ID: $GENERATION_ID)"
   fi
 fi
