@@ -10,17 +10,25 @@ if [[ -z "$API_KEY" ]]; then
   exit 1
 fi
 
+MODEL="meta-llama/llama-3.3-70b-instruct"  # Default model
+if [[ "$1" == "--gemini" ]]; then
+    MODEL="google/gemini-2.0-flash-001"
+    shift  # Remove the flag from arguments
+fi
+
 # Ensure a question is provided
 if [[ -z "$1" ]]; then
-  echo "Usage: llm \"your question here\""
-  exit 1
+    echo "Usage: llm [--gemini] \"your question here\""
+    echo "Options:"
+    echo "  --gemini    Use Google's Gemini model instead of Llama"
+    exit 1
 fi
 
 # Convert input question to JSON format
 QUESTION=$1
 JSON_PAYLOAD=$(cat <<EOF
 {
-  "model": "meta-llama/llama-3.3-70b-instruct",
+  "model": "$MODEL",
   "messages": [
     {
       "role": "system",
