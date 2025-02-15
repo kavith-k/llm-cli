@@ -22,6 +22,16 @@ Use Gemini model:
 llm --gemini "your question here"
 ```
 
+Use Claude 3.5 Sonnet:
+```bash
+llm -c "your question here"
+```
+
+Use DeepSeek R1:
+```bash
+llm -r1 "your question here"
+```
+
 ## Features
 
 - Direct access to powerful language models from the command line
@@ -29,6 +39,8 @@ llm --gemini "your question here"
 - Support for multiple models:
   - Meta's Llama 3 70B (default)
   - Google's Gemini 2.0
+  - Anthropic's Claude 3.5 Sonnet
+  - DeepSeek R1
 - Secure API key storage using macOS Keychain
 
 ## Output

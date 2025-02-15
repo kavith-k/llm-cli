@@ -16,6 +16,14 @@ if [[ "$1" == "-g" ]]; then
     MODEL="google/gemini-2.0-flash-001"
     MODEL_NAME="Gemini"
     shift  # Remove the flag from arguments
+elif [[ "$1" == "-c" ]]; then
+    MODEL="anthropic/claude-3.5-sonnet"
+    MODEL_NAME="Claude"
+    shift  # Remove the flag from arguments
+elif [[ "$1" == "-r1" ]]; then
+    MODEL="deepseek/deepseek-r1"
+    MODEL_NAME="DeepSeek"
+    shift  # Remove the flag from arguments
 fi
 
 # Ensure a question is provided
@@ -23,6 +31,8 @@ if [[ -z "$1" ]]; then
     echo "Usage: llm [-g] \"your question here\""
     echo "Options:"
     echo "  -g    Use Google's Gemini model instead of Llama"
+    echo "  -c    Use Anthropic's Claude 3.5 Sonnet model"
+    echo "  -r1   Use DeepSeek's R1 model"
     exit 1
 fi
 
