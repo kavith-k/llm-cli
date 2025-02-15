@@ -70,6 +70,8 @@ if [[ -n "$GENERATION_ID" && "$GENERATION_ID" != "null" ]]; then
     # If we get valid JSON with data (not an error response), break the loop
     if echo "$STATS_RESPONSE" | jq -e '.data' >/dev/null 2>&1; then
       break
+    elif [ "$retry" -eq 0 ]; then
+      echo -e "\nFetching usage stats... (Ctrl+C to skip)"
     fi
   done
 
