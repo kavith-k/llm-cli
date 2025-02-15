@@ -34,7 +34,7 @@ JSON_PAYLOAD=$(cat <<EOF
   "messages": [
     {
       "role": "system",
-      "content": "Provide direct, concise answers."
+      "content": "Provide direct, concise answers. Do not hallucinate if you don't have concrete answers."
     },
     {
       "role": "user",
@@ -59,23 +59,25 @@ GENERATION_ID=$(echo "$RESPONSE" | jq -r '.id')
 echo -e "\n$MESSAGE\n"
 
 # Add a small delay to ensure stats are available
-sleep 0.25
+sleep 1
 
 # Fetch generation stats
 if [[ -n "$GENERATION_ID" && "$GENERATION_ID" != "null" ]]; then
   STATS_RESPONSE=$(curl -s "https://openrouter.ai/api/v1/generation?id=$GENERATION_ID" \
     -H "Authorization: Bearer $API_KEY")
 
+  echo "STATS_RESPONSE: $STATS_RESPONSE"
+
   # Check if stats response is valid JSON
   if echo "$STATS_RESPONSE" | jq empty >/dev/null 2>&1; then
     # Extract statistics
-    INPUT_TOKENS=$(echo "$STATS_RESPONSE" | jq -r '.data.tokens_prompt // "?"')
-    OUTPUT_TOKENS=$(echo "$STATS_RESPONSE" | jq -r '.data.tokens_completion // "?"')
+    INPUT_TOKENS=$(echo "$STATS_RESPONSE" | jq -r '.data.native_tokens_prompt // "?"')
+    OUTPUT_TOKENS=$(echo "$STATS_RESPONSE" | jq -r '.data.native_tokens_completion // "?"')
     GENERATION_TIME=$(echo "$STATS_RESPONSE" | jq -r '.data.generation_time // "?"')
-    TOTAL_COST=$(echo "$STATS_RESPONSE" | jq -r '.data.total_cost // "0"')
+    TOTAL_COST=$(echo "$STATS_RESPONSE" | jq -r '.data.total_cost // "?"')
 
     # Print stats in a compact horizontal format
-    echo -e "Input Tokens: $INPUT_TOKENS | Output Tokens: $OUTPUT_TOKENS | Time: ${GENERATION_TIME}ms | Cost: \$${TOTAL_COST} | Model: $MODEL_NAME"
+    echo -e "Model: $MODEL_NAME | Input Tokens: $INPUT_TOKENS | Output Tokens: $OUTPUT_TOKENS | Time: ${GENERATION_TIME}ms | Cost: \$${TOTAL_COST}"
   else
     echo "Warning: Could not retrieve generation stats."
   fi
