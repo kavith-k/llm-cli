@@ -11,8 +11,10 @@ if [[ -z "$API_KEY" ]]; then
 fi
 
 MODEL="meta-llama/llama-3.3-70b-instruct"  # Default model
+MODEL_NAME="Llama"  # Default model name
 if [[ "$1" == "-g" ]]; then
     MODEL="google/gemini-2.0-flash-001"
+    MODEL_NAME="Gemini"
     shift  # Remove the flag from arguments
 fi
 
@@ -73,7 +75,7 @@ if [[ -n "$GENERATION_ID" && "$GENERATION_ID" != "null" ]]; then
     TOTAL_COST=$(echo "$STATS_RESPONSE" | jq -r '.data.total_cost // "0"')
 
     # Print stats in a compact horizontal format
-    echo -e "Input Tokens: $INPUT_TOKENS | Output Tokens: $OUTPUT_TOKENS | Time: ${GENERATION_TIME}ms | Cost: \$${TOTAL_COST}"
+    echo -e "Input Tokens: $INPUT_TOKENS | Output Tokens: $OUTPUT_TOKENS | Time: ${GENERATION_TIME}ms | Cost: \$${TOTAL_COST} | Model: $MODEL_NAME"
   else
     echo "Warning: Could not retrieve generation stats."
   fi
