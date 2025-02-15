@@ -34,7 +34,7 @@ JSON_PAYLOAD=$(cat <<EOF
   "messages": [
     {
       "role": "system",
-      "content": "Provide direct, concise answers. Do not hallucinate if you don't have concrete answers."
+      "content": "Provide direct, concise answers. Do not hallucinate."
     },
     {
       "role": "user",
@@ -71,7 +71,7 @@ if [[ -n "$GENERATION_ID" && "$GENERATION_ID" != "null" ]]; then
     if echo "$STATS_RESPONSE" | jq -e '.data' >/dev/null 2>&1; then
       break
     elif [ "$retry" -eq 0 ]; then
-      echo -e "\nFetching usage stats... (Ctrl+C to skip)"
+      echo -e "Fetching usage stats... (Ctrl+C to skip)"
     fi
   done
 
