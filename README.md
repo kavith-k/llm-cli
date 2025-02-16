@@ -11,6 +11,7 @@ This tool was mostly built using LLMs: [ChatGPT 4o](https://chatgpt.com) and Cla
 ```bash
 security add-generic-password -s "OPENROUTER_API_KEY" -a "$USER" -w "<your-api-key>"
 ```
+3. Make sure you have [jq](https://jqlang.org/) installed
 
 ## Usage
 
